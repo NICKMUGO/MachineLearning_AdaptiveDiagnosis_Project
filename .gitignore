@@ -1,0 +1,10 @@
+data/raw/
+data/processed/
+data/feedback.db
+.venv/
+__pycache__/
+*.pyc
+*.pkl
+*.joblib
+.DS_Store
+*.Zone.Identifier
