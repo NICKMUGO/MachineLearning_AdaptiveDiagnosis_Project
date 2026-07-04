@@ -1,10 +1,20 @@
-data/raw/
-data/processed/
-data/feedback.db
+# data/raw/
+# data/processed/
+# data/feedback.db
 .venv/
+venv/
 __pycache__/
 *.pyc
 *.pkl
 *.joblib
 .DS_Store
+Thumbs.db
 *.Zone.Identifier
+.ipynb_checkpoints/
+.env
+.env.*
+.vscode/
+.idea/
+*.log
+.pytest_cache/
+.streamlit/secrets.toml
