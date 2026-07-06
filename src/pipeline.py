@@ -16,12 +16,30 @@ def _norm(name: str) -> str:
 
 
 def load_artifacts():
-    model        = joblib.load(PROC / 'ensemble_model.pkl')
     feature_cols = joblib.load(PROC / 'feature_cols.pkl')
     le           = joblib.load(PROC / 'label_encoder.pkl')
     prec_df      = pd.read_csv(ROOT / 'data' / 'raw' / 'itachi9604' / 'symptom_precaution.csv')
     prec_df.columns = [c.strip() for c in prec_df.columns]
     prec_df['Disease'] = prec_df['Disease'].str.strip().str.lower()
+
+    # Once feedback has been logged and retrain_on_feedback() has produced
+    # an online_model.pkl, it reflects the ensemble plus everything learned
+    # from user-confirmed outcomes, so prefer it over the static ensemble.
+    # If notebooks 02-04 were rerun since, feature_cols/label_encoder may
+    # have changed shape, making a previously-saved online_model stale and
+    # incompatible - fall back to the ensemble rather than crash.
+    online_path = PROC / 'online_model.pkl'
+    model = None
+    if online_path.exists():
+        online_model = joblib.load(online_path)
+        n_features = getattr(online_model, 'n_features_in_', None)
+        n_classes  = getattr(online_model, 'classes_', [])
+        if n_features == len(feature_cols) and len(n_classes) == len(le.classes_):
+            model = online_model
+
+    if model is None:
+        model = joblib.load(PROC / 'ensemble_model.pkl')
+
     return model, feature_cols, le, prec_df
 
 
@@ -35,7 +53,6 @@ def symptoms_to_vector(symptoms: list, feature_cols: list) -> np.ndarray:
 
 
 def get_top_k_conditions(symptoms: list, k: int = 3):
-    """Return (top_k, treatments) where top_k is [(disease, prob), ...]."""
     model, feature_cols, le, prec_df = load_artifacts()
     vec    = symptoms_to_vector(symptoms, feature_cols)
     probs  = model.predict_proba(vec)[0]

@@ -40,7 +40,7 @@ Symptoms ──► Probabilistic differential ──► Ranked treatment / ─�
 
 | Dataset | Source | Use |
 |---|---|---|
-| Disease Prediction Using ML (`Training.csv`, `Testing.csv`) | Kaggle — kaushil268 | Layer 1: 132 symptoms → 42 diseases |
+| Disease Prediction Using ML (`Training.csv`, `Testing.csv`) | Kaggle — kaushil268 (+ 8 ENT diseases added locally) | Layer 1: 142 symptoms → 49 diseases |
 | Disease Symptom Prediction (`symptom_precaution.csv`, etc.) | Kaggle — itachi9604 | Layer 2: disease → recommended actions |
 | Drug Review Dataset (Drugs.com) | UCI / Kaggle | Treatment ranking by patient-reported effectiveness |
 | DDXPlus *(stretch)* | Kaggle / figshare | ~1.3M synthetic cases with ground-truth differential — justifies top-k design |

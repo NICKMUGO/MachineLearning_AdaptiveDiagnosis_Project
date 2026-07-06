@@ -84,6 +84,17 @@ def retrain_on_feedback():
         joblib.load(online_path) if online_path.exists()
         else SGDClassifier(loss='log_loss', random_state=42)
     )
+    # If the label encoder or feature set has since changed shape (e.g.
+    # notebooks 02-04 rerun on new data), the previously fitted
+    # online_model's classes_/n_features_in_ no longer match what
+    # partial_fit would reject as a change from the first call, so start
+    # a fresh model instead of reusing the stale one.
+    stale = (
+        (hasattr(online_model, 'classes_') and len(online_model.classes_) != n_classes)
+        or (hasattr(online_model, 'n_features_in_') and online_model.n_features_in_ != len(feature_cols))
+    )
+    if stale:
+        online_model = SGDClassifier(loss='log_loss', random_state=42)
 
     X_rows, y_rows = [], []
     for _, row in improved.iterrows():

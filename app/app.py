@@ -44,8 +44,6 @@ if feature_cols is None:
 
 symptom_options = sorted(c.replace('_', ' ').strip().title() for c in feature_cols)
 raw_map = {c.replace('_', ' ').strip().title(): c for c in feature_cols}
-
-# ── Step 1: symptom selection ───────────────────────────────────────────────
 st.header('Step 1 — Select Symptoms')
 selected_display = st.multiselect(
     'Choose all symptoms that apply:',
@@ -66,7 +64,6 @@ if st.button('Get Recommendations', type='primary', disabled=not selected_displa
         except FileNotFoundError as exc:
             st.error(f'Model artifact missing: {exc}. Run notebooks 01–04 first.')
 
-# ── Step 2 & 3: results ─────────────────────────────────────────────────────
 if st.session_state.results:
     selected_raw, top_k, treatments = st.session_state.results
 
@@ -91,7 +88,6 @@ if st.session_state.results:
             else:
                 st.write('No specific precautions on record for this condition.')
 
-    # ── Step 4: feedback ────────────────────────────────────────────────────
     st.divider()
     st.header('Step 4 — Outcome Feedback')
     st.write('Your feedback is used to improve recommendations over time.')
